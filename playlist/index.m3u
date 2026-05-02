@@ -8,6 +8,9 @@ https://okrutv.k33n26.workers.dev/3827358247355.m3u8?q=1080
 #EXTINF:-1 tvg-name="Dizi HD" tvg-logo="https://site.com/logo3.png" group-title="Dizi",Dizi HD
 https://okrutv.k33n26.workers.dev/7172579527222.m3u8?q=1080
 
-#EXTINF:-1 tvg-name="Recep İvedik" tvg-logo="https://site.com/logo2.png" group-title="Film",Recep İvedik
+#EXTINF:-1 tvg-name="Recep İvedik 1" tvg-logo="https://site.com/logo2.png" group-title="Film",Recep İvedik 1
 https://okrutv.k33n26.workers.dev/934478154486.m3u8?q=1080
+
+#EXTINF:-1 tvg-name="Sarı Mercedes" tvg-logo="" group-title="undefined",Sarı Mercedes
+https://okrutv.k33n26.workers.dev/7172635560502.m3u8?q=1080
 
