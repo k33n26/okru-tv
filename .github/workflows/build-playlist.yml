@@ -1,0 +1,35 @@
+name: Build Playlist
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node scripts/build.js
+
+      - run: |
+          git config user.name github-actions
+          git config user.email actions@github.com
+
+          git add playlist/index.m3u
+
+          git diff --staged --quiet || git commit -m "playlist"
+
+          git push
