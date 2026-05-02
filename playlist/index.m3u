@@ -1,0 +1,10 @@
+#EXTM3U
+#EXTINF:-1 tvg-name="Belgesel HD" tvg-logo="https://site.com/logo1.png" group-title="Belgesel",Belgesel HD
+https://okrutv.k33n26.workers.dev/21395999343.m3u8?q=1080
+
+#EXTINF:-1 tvg-name="Film HD" tvg-logo="https://site.com/logo2.png" group-title="Film",Film HD
+https://okrutv.k33n26.workers.dev/3827358247355.m3u8?q=1080
+
+#EXTINF:-1 tvg-name="Dizi HD" tvg-logo="https://site.com/logo3.png" group-title="Dizi",Dizi HD
+https://okrutv.k33n26.workers.dev/7172579527222.m3u8?q=1080
+
