@@ -1,6 +1,4 @@
-Belgesel HD|21395999343|https://site.com/logo1.png|Belgesel
-Film HD|3827358247355|https://site.com/logo2.png|Film
-Dizi HD|7172579527222|https://site.com/logo3.png|Dizi
-Recep İvedik 1|934478154486|https://site.com/logo2.png|Film
-Sarı Mercedes|7172635560502|
+Recep İvedik 1 -2008|934478154486|https://i.ibb.co/ZpN4Bwxg/Recep-vedik-1.jpg|Film
+Sarı Mercedes -1992|7172635560502|https://i.ibb.co/fdCKVf4N/Sar-Mercedes-1992-afi.jpg|Film
 Züğürt Ağa -1985|7172579527222|https://i.ibb.co/S4hbGh49/Z-rt-A-a-film.jpg|Film
+Değirmen -1986|1199762049590|https://i.ibb.co/zV8Z6wHw/Degirmen-1986.jpg|Film
