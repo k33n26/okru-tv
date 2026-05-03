@@ -5,14 +5,7 @@ function decodeHtml(str) {
     .replace(/&#39;/g, "'");
 }
 
-
-/*
- quality selector
-*/
-function getBest(
-  videos,
-  quality
-) {
+function getBest(videos, quality) {
 
   if (quality) {
 
@@ -36,18 +29,13 @@ function getBest(
 }
 
 
-/*
- okru metadata
-*/
-async function loadMeta(
-  id
-) {
+async function loadMeta(id) {
 
   const html =
     await fetch(
       `https://ok.ru/videoembed/${id}`,
       {
-        headers: {
+        headers:{
           "User-Agent":
             "Mozilla/5.0"
         }
@@ -64,7 +52,6 @@ async function loadMeta(
 
 
   if (!match) {
-
     throw new Error(
       "metadata"
     );
@@ -88,18 +75,20 @@ async function loadMeta(
 
 
 /*
- segment proxy
- Android range support
+ real byte stream proxy
 */
-async function proxyFile(
-  fileUrl,
+async function proxyVideo(
+  sourceUrl,
   request
-) {
+){
 
-  const inHeaders = {
+  const headers = {
 
     "User-Agent":
-      "Mozilla/5.0"
+      "Mozilla/5.0",
+
+    "Referer":
+      "https://ok.ru/"
   };
 
 
@@ -111,7 +100,7 @@ async function proxyFile(
 
   if (range) {
 
-    inHeaders[
+    headers[
       "Range"
     ] = range;
   }
@@ -119,10 +108,9 @@ async function proxyFile(
 
   const upstream =
     await fetch(
-      fileUrl,
+      sourceUrl,
       {
-        headers:
-          inHeaders
+        headers
       }
     );
 
@@ -179,24 +167,6 @@ async function proxyFile(
 }
 
 
-/*
- fake HLS from mp4
-*/
-function buildHls(
-  sourceUrl,
-  origin
-) {
-
-  return `#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:36000
-#EXT-X-MEDIA-SEQUENCE:0
-#EXTINF:36000,
-${origin}/seg?u=${encodeURIComponent(sourceUrl)}
-#EXT-X-ENDLIST`;
-}
-
-
 export default {
 
   async fetch(
@@ -211,37 +181,13 @@ export default {
         );
 
 
-      /*
-       debug
-      */
       if (
         url.pathname ===
         "/debug"
       ) {
 
         return new Response(
-          "OKRU ANDROID V1"
-        );
-      }
-
-
-      /*
-       segment
-      */
-      if (
-        url.pathname ===
-        "/seg"
-      ) {
-
-        const file =
-          url.searchParams.get(
-            "u"
-          );
-
-
-        return await proxyFile(
-          file,
-          request
+          "OKRU STREAM V1"
         );
       }
 
@@ -259,18 +205,9 @@ export default {
 
       const id =
         path
-          .replace(
-            ".json",
-            ""
-          )
-          .replace(
-            ".m3u8",
-            ""
-          )
-          .replace(
-            ".mp4",
-            ""
-          );
+          .replace(".json", "")
+          .replace(".mp4", "")
+          .replace(".m3u8", "");
 
 
       const meta =
@@ -315,43 +252,11 @@ export default {
 
 
       /*
-       hls
+       mp4 + m3u8 both stream
       */
-      if (
-        path.endsWith(
-          ".m3u8"
-        )
-      ) {
-
-        const body =
-          buildHls(
-            selected.url,
-            url.origin
-          );
-
-
-        return new Response(
-          body,
-          {
-            headers: {
-
-              "Content-Type":
-                "text/plain",
-
-              "Cache-Control":
-                "no-cache"
-            }
-          }
-        );
-      }
-
-
-      /*
-       mp4 redirect
-      */
-      return Response.redirect(
+      return await proxyVideo(
         selected.url,
-        302
+        request
       );
 
     }
@@ -362,7 +267,7 @@ export default {
       return new Response(
         e.message,
         {
-          status: 500
+          status:500
         }
       );
     }
