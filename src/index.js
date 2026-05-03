@@ -6,19 +6,65 @@ function decodeHtml(str) {
 }
 
 
-function getBest(videos, quality) {
-
-  const order = {
-    "1080": ["full", "1080"],
-    "720": ["hd", "720"],
-    "480": ["sd", "480"],
-    "360": ["lowest", "mobile"]
-  };
+/*
+ quality picker
+ supports:
+ ?q=sd
+ ?q=mobile
+ ?q=480
+ ?q=360
+*/
+function getBest(
+  videos,
+  quality
+) {
 
   if (quality) {
 
+    // direct match
+    const direct =
+      videos.find(
+        v =>
+          v.name
+            .toLowerCase() ===
+          quality
+            .toLowerCase()
+      );
+
+    if (direct) {
+      return direct;
+    }
+
+
+    // mapped match
+    const order = {
+
+      "1080": [
+        "full",
+        "1080"
+      ],
+
+      "720": [
+        "hd",
+        "720"
+      ],
+
+      "480": [
+        "sd",
+        "480"
+      ],
+
+      "360": [
+        "low",
+        "lowest",
+        "mobile"
+      ]
+    };
+
+
     const wanted =
       order[quality] || [];
+
 
     for (const q of wanted) {
 
@@ -35,6 +81,8 @@ function getBest(videos, quality) {
     }
   }
 
+
+  // fallback = highest available
   return videos[
     videos.length - 1
   ];
@@ -56,16 +104,20 @@ async function loadMeta(id) {
       r => r.text()
     );
 
+
   const match =
     html.match(
       /data-options="([^"]+)"/
     );
 
+
   if (!match) {
+
     throw new Error(
       "metadata"
     );
   }
+
 
   const options =
     JSON.parse(
@@ -73,6 +125,7 @@ async function loadMeta(id) {
         match[1]
       )
     );
+
 
   return JSON.parse(
     options
@@ -83,7 +136,7 @@ async function loadMeta(id) {
 
 
 /*
- SEGMENT PROXY
+ segment proxy
 */
 async function proxyFile(
   fileUrl
@@ -100,23 +153,28 @@ async function proxyFile(
       }
     );
 
+
   const headers =
     new Headers();
+
 
   headers.set(
     "Access-Control-Allow-Origin",
     "*"
   );
 
+
   headers.set(
     "Accept-Ranges",
     "bytes"
   );
 
+
   const type =
     upstream.headers.get(
       "content-type"
     );
+
 
   if (type) {
 
@@ -126,10 +184,12 @@ async function proxyFile(
     );
   }
 
+
   const length =
     upstream.headers.get(
       "content-length"
     );
+
 
   if (length) {
 
@@ -138,6 +198,7 @@ async function proxyFile(
       length
     );
   }
+
 
   return new Response(
     upstream.body,
@@ -152,7 +213,7 @@ async function proxyFile(
 
 
 /*
- MANIFEST PROXY
+ manifest proxy
 */
 async function proxyManifest(
   manifestUrl,
@@ -170,14 +231,17 @@ async function proxyManifest(
       }
     );
 
+
   let manifest =
     await upstream.text();
+
 
   const base =
     manifestUrl.substring(
       0,
       manifestUrl.lastIndexOf("/") + 1
     );
+
 
   manifest =
     manifest.replace(
@@ -190,8 +254,10 @@ async function proxyManifest(
           return line;
         }
 
+
         let full =
           line;
+
 
         if (
           !line.startsWith(
@@ -203,14 +269,17 @@ async function proxyManifest(
             base + line;
         }
 
+
         return `${origin}/seg?u=${encodeURIComponent(full)}`;
       }
     );
+
 
   return new Response(
     manifest,
     {
       headers: {
+
         "Content-Type":
           "application/vnd.apple.mpegurl",
 
@@ -238,7 +307,7 @@ export default {
 
 
       /*
-       segment proxy
+       segment endpoint
       */
       if (
         url.pathname ===
@@ -249,6 +318,7 @@ export default {
           url.searchParams.get(
             "u"
           );
+
 
         return await proxyFile(
           file
@@ -261,9 +331,11 @@ export default {
           .searchParams
           .get("q");
 
+
       const path =
         url.pathname
           .replace("/", "");
+
 
       const id =
         path
@@ -276,6 +348,7 @@ export default {
         await loadMeta(
           id
         );
+
 
       const selected =
         getBest(
@@ -310,7 +383,7 @@ export default {
 
 
       /*
-       REAL HLS
+       M3U8
       */
       if (
         path.endsWith(
