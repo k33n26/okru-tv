@@ -5,6 +5,7 @@ function decodeHtml(str) {
     .replace(/&#39;/g, "'");
 }
 
+
 function getBest(videos, quality) {
 
   const order = {
@@ -25,8 +26,7 @@ function getBest(videos, quality) {
         videos.find(
           v =>
             v.name
-              .toLowerCase()
-              === q
+              .toLowerCase() === q
         );
 
       if (found) {
@@ -83,48 +83,87 @@ async function loadMeta(id) {
 
 
 /*
- segment proxy
+ SEGMENT PROXY
 */
 async function proxyFile(
   fileUrl
-){
+) {
 
   const upstream =
     await fetch(
       fileUrl,
       {
-        headers:{
+        headers: {
           "User-Agent":
             "Mozilla/5.0"
         }
       }
     );
 
+  const headers =
+    new Headers();
+
+  headers.set(
+    "Access-Control-Allow-Origin",
+    "*"
+  );
+
+  headers.set(
+    "Accept-Ranges",
+    "bytes"
+  );
+
+  const type =
+    upstream.headers.get(
+      "content-type"
+    );
+
+  if (type) {
+
+    headers.set(
+      "Content-Type",
+      type
+    );
+  }
+
+  const length =
+    upstream.headers.get(
+      "content-length"
+    );
+
+  if (length) {
+
+    headers.set(
+      "Content-Length",
+      length
+    );
+  }
+
   return new Response(
     upstream.body,
     {
-      headers:{
-        "Access-Control-Allow-Origin":
-          "*"
-      }
+      status:
+        upstream.status,
+
+      headers
     }
   );
 }
 
 
 /*
- manifest proxy
+ MANIFEST PROXY
 */
 async function proxyManifest(
   manifestUrl,
   origin
-){
+) {
 
   const upstream =
     await fetch(
       manifestUrl,
       {
-        headers:{
+        headers: {
           "User-Agent":
             "Mozilla/5.0"
         }
@@ -145,20 +184,21 @@ async function proxyManifest(
       /^([^#].+)$/gm,
       line => {
 
-        if(
+        if (
           line.startsWith("#")
-        ){
+        ) {
           return line;
         }
 
         let full =
           line;
 
-        if(
+        if (
           !line.startsWith(
             "http"
           )
-        ){
+        ) {
+
           full =
             base + line;
         }
@@ -170,12 +210,15 @@ async function proxyManifest(
   return new Response(
     manifest,
     {
-      headers:{
+      headers: {
         "Content-Type":
           "application/vnd.apple.mpegurl",
 
         "Access-Control-Allow-Origin":
-          "*"
+          "*",
+
+        "Cache-Control":
+          "no-cache"
       }
     }
   );
@@ -195,12 +238,12 @@ export default {
 
 
       /*
-       segment
+       segment proxy
       */
-      if(
+      if (
         url.pathname ===
         "/seg"
-      ){
+      ) {
 
         const file =
           url.searchParams.get(
@@ -224,9 +267,10 @@ export default {
 
       const id =
         path
-          .replace(".mp4","")
-          .replace(".m3u8","")
-          .replace(".json","");
+          .replace(".mp4", "")
+          .replace(".m3u8", "")
+          .replace(".json", "");
+
 
       const meta =
         await loadMeta(
@@ -240,26 +284,39 @@ export default {
         );
 
 
-      if(
+      /*
+       JSON
+      */
+      if (
         path.endsWith(
           ".json"
         )
-      ){
+      ) {
 
         return Response.json({
+
           id,
+
           title:
             meta.movie
-              ?.title
+              ?.title,
+
+          qualities:
+            meta.videos.map(
+              x => x.name
+            )
         });
       }
 
 
-      if(
+      /*
+       REAL HLS
+      */
+      if (
         path.endsWith(
           ".m3u8"
         )
-      ){
+      ) {
 
         return await proxyManifest(
           selected.url,
@@ -268,18 +325,21 @@ export default {
       }
 
 
+      /*
+       MP4
+      */
       return Response.redirect(
         selected.url,
         302
       );
 
     }
-    catch(e){
+    catch (e) {
 
       return new Response(
         e.message,
         {
-          status:500
+          status: 500
         }
       );
     }
