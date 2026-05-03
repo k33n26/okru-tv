@@ -5,7 +5,6 @@ function decodeHtml(str) {
     .replace(/&#39;/g, "'");
 }
 
-
 function getBest(videos, quality) {
 
   const order = {
@@ -83,15 +82,49 @@ async function loadMeta(id) {
 }
 
 
+/*
+ segment proxy
+*/
+async function proxyFile(
+  fileUrl
+){
+
+  const upstream =
+    await fetch(
+      fileUrl,
+      {
+        headers:{
+          "User-Agent":
+            "Mozilla/5.0"
+        }
+      }
+    );
+
+  return new Response(
+    upstream.body,
+    {
+      headers:{
+        "Access-Control-Allow-Origin":
+          "*"
+      }
+    }
+  );
+}
+
+
+/*
+ manifest proxy
+*/
 async function proxyManifest(
-  manifestUrl
-) {
+  manifestUrl,
+  origin
+){
 
   const upstream =
     await fetch(
       manifestUrl,
       {
-        headers: {
+        headers:{
           "User-Agent":
             "Mozilla/5.0"
         }
@@ -100,11 +133,6 @@ async function proxyManifest(
 
   let manifest =
     await upstream.text();
-
-  /*
-   relative segmentleri
-   absolute yap
-  */
 
   const base =
     manifestUrl.substring(
@@ -117,30 +145,37 @@ async function proxyManifest(
       /^([^#].+)$/gm,
       line => {
 
-        if (
-          line.startsWith(
-            "http"
-          )
-        ) {
+        if(
+          line.startsWith("#")
+        ){
           return line;
         }
 
-        return base + line;
+        let full =
+          line;
+
+        if(
+          !line.startsWith(
+            "http"
+          )
+        ){
+          full =
+            base + line;
+        }
+
+        return `${origin}/seg?u=${encodeURIComponent(full)}`;
       }
     );
 
   return new Response(
     manifest,
     {
-      headers: {
+      headers:{
         "Content-Type":
           "application/vnd.apple.mpegurl",
 
         "Access-Control-Allow-Origin":
-          "*",
-
-        "Cache-Control":
-          "no-cache"
+          "*"
       }
     }
   );
@@ -158,6 +193,26 @@ export default {
           request.url
         );
 
+
+      /*
+       segment
+      */
+      if(
+        url.pathname ===
+        "/seg"
+      ){
+
+        const file =
+          url.searchParams.get(
+            "u"
+          );
+
+        return await proxyFile(
+          file
+        );
+      }
+
+
       const quality =
         url
           .searchParams
@@ -169,79 +224,49 @@ export default {
 
       const id =
         path
-          .replace(
-            ".mp4",
-            ""
-          )
-          .replace(
-            ".m3u8",
-            ""
-          )
-          .replace(
-            ".json",
-            ""
-          );
+          .replace(".mp4","")
+          .replace(".m3u8","")
+          .replace(".json","");
 
       const meta =
         await loadMeta(
           id
         );
 
-      const videos =
-        meta.videos;
-
       const selected =
         getBest(
-          videos,
+          meta.videos,
           quality
         );
 
 
-      /*
-       JSON
-      */
-
-      if (
+      if(
         path.endsWith(
           ".json"
         )
-      ) {
+      ){
 
         return Response.json({
           id,
-
           title:
             meta.movie
-              ?.title,
-
-          qualities:
-            videos.map(
-              x =>
-                x.name
-            )
+              ?.title
         });
       }
 
 
-      /*
-       REAL HLS
-      */
-
-      if (
+      if(
         path.endsWith(
           ".m3u8"
         )
-      ) {
+      ){
 
         return await proxyManifest(
-          selected.url
+          selected.url,
+          url.origin
         );
       }
 
-
-      /*
-       MP4
-      */
 
       return Response.redirect(
         selected.url,
@@ -249,12 +274,12 @@ export default {
       );
 
     }
-    catch (e) {
+    catch(e){
 
       return new Response(
         e.message,
         {
-          status: 500
+          status:500
         }
       );
     }
