@@ -5,22 +5,21 @@ function decodeHtml(str) {
     .replace(/&#39;/g, "'");
 }
 
-
 function getBest(videos, quality) {
 
   if (quality) {
 
-    const direct =
+    const found =
       videos.find(
-        v =>
-          v.name
+        x =>
+          x.name
             .toLowerCase() ===
           quality
             .toLowerCase()
       );
 
-    if (direct) {
-      return direct;
+    if (found) {
+      return found;
     }
   }
 
@@ -36,7 +35,7 @@ async function loadMeta(id) {
     await fetch(
       `https://ok.ru/videoembed/${id}`,
       {
-        headers:{
+        headers: {
           "User-Agent":
             "Mozilla/5.0"
         }
@@ -61,20 +60,25 @@ async function loadMeta(id) {
 
 
   return JSON.parse(
-    options.flashvars.metadata
+    options
+      .flashvars
+      .metadata
   );
 }
 
 
+/*
+ segment proxy
+*/
 async function proxyFile(
   fileUrl
-){
+) {
 
   const upstream =
     await fetch(
       fileUrl,
       {
-        headers:{
+        headers: {
           "User-Agent":
             "Mozilla/5.0"
         }
@@ -84,17 +88,12 @@ async function proxyFile(
   return new Response(
     upstream.body,
     {
-      status:
-        upstream.status,
+      headers: {
 
-      headers:{
         "Content-Type":
-          upstream.headers.get("content-type")
-          || "video/mp4",
-
-        "Content-Length":
-          upstream.headers.get("content-length")
-          || "",
+          upstream.headers.get(
+            "content-type"
+          ) || "video/mp4",
 
         "Accept-Ranges":
           "bytes",
@@ -107,102 +106,27 @@ async function proxyFile(
 }
 
 
-async function proxyManifest(
+/*
+ always build hls
+*/
+function buildHls(
   sourceUrl,
   origin
-){
+) {
 
-  /*
-   mp4 ise single file hls üret
-  */
-
-  if(
-    !sourceUrl.includes(
-      ".m3u8"
-    )
-  ){
-
-    const body =
-`#EXTM3U
+  return `#EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-TARGETDURATION:36000
 #EXT-X-MEDIA-SEQUENCE:0
 #EXTINF:36000,
-/seg?u=${encodeURIComponent(sourceUrl)}
+${origin}/seg?u=${encodeURIComponent(sourceUrl)}
 #EXT-X-ENDLIST`;
-
-    return new Response(
-      body,
-      {
-        headers:{
-          "Content-Type":
-            "application/vnd.apple.mpegurl"
-        }
-      }
-    );
-  }
-
-
-  /*
-   gerçek hls ise proxy
-  */
-
-  const upstream =
-    await fetch(
-      sourceUrl
-    );
-
-  let manifest =
-    await upstream.text();
-
-  const base =
-    sourceUrl.substring(
-      0,
-      sourceUrl.lastIndexOf("/") + 1
-    );
-
-  manifest =
-    manifest.replace(
-      /^([^#].+)$/gm,
-      line => {
-
-        if(
-          line.startsWith("#")
-        ){
-          return line;
-        }
-
-        let full =
-          line;
-
-        if(
-          !line.startsWith(
-            "http"
-          )
-        ){
-          full =
-            base + line;
-        }
-
-        return `${origin}/seg?u=${encodeURIComponent(full)}`;
-      }
-    );
-
-  return new Response(
-    manifest,
-    {
-      headers:{
-        "Content-Type":
-          "application/vnd.apple.mpegurl"
-      }
-    }
-  );
 }
 
 
 export default {
 
-  async fetch(request){
+  async fetch(request) {
 
     const url =
       new URL(
@@ -210,21 +134,23 @@ export default {
       );
 
 
-    if(
+    /*
+     segment endpoint
+    */
+    if (
       url.pathname ===
       "/seg"
-    ){
+    ) {
+
+      const file =
+        url.searchParams.get(
+          "u"
+        );
 
       return await proxyFile(
-        url.searchParams.get("u")
+        file
       );
     }
-
-
-    const quality =
-      url.searchParams.get(
-        "q"
-      );
 
 
     const path =
@@ -232,11 +158,17 @@ export default {
         .replace("/", "");
 
 
+    const quality =
+      url
+        .searchParams
+        .get("q");
+
+
     const id =
       path
-        .replace(".json","")
-        .replace(".m3u8","")
-        .replace(".mp4","");
+        .replace(".json", "")
+        .replace(".m3u8", "")
+        .replace(".mp4", "");
 
 
     const meta =
@@ -252,43 +184,68 @@ export default {
       );
 
 
-    if(
+    /*
+     json
+    */
+    if (
       path.endsWith(
         ".json"
       )
-    ){
+    ) {
 
       return Response.json({
 
         id,
 
         title:
-          meta.movie?.title,
+          meta.movie
+            ?.title,
+
+        source:
+          selected.url,
 
         qualities:
           meta.videos.map(
             x => x.name
-          ),
-
-        source:
-          selected.url
+          )
       });
     }
 
 
-    if(
+    /*
+     m3u8 ALWAYS TEXT
+    */
+    if (
       path.endsWith(
         ".m3u8"
       )
-    ){
+    ) {
 
-      return await proxyManifest(
-        selected.url,
-        url.origin
+      const body =
+        buildHls(
+          selected.url,
+          url.origin
+        );
+
+      return new Response(
+        body,
+        {
+          headers: {
+
+            "Content-Type":
+              "text/plain",
+
+            "Cache-Control":
+              "no-cache"
+          }
+        }
       );
     }
 
 
+    /*
+     mp4 redirect
+    */
     return Response.redirect(
       selected.url,
       302
