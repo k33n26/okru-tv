@@ -152,18 +152,63 @@ export default {
 
 
       if (
-        path.endsWith(
-          ".m3u8"
-        )
-      ) {
+  path.endsWith(
+    ".m3u8"
+  )
+) {
 
-        const body =
-`#EXTM3U
-#EXTINF:-1,${meta.movie?.title || id}
-${selected.url}`;
+  const upstream =
+    await fetch(
+      selected.url,
+      {
+        headers:{
+          "User-Agent":
+            "Mozilla/5.0"
+        }
+      }
+    );
 
-        return new Response(
-          body,
+  let manifest =
+    await upstream.text();
+
+  const base =
+    selected.url.substring(
+      0,
+      selected.url.lastIndexOf("/") + 1
+    );
+
+  manifest =
+    manifest.replace(
+      /^([^#].+)$/gm,
+      line => {
+
+        if(
+          line.startsWith(
+            "http"
+          )
+        ){
+          return line;
+        }
+
+        return base + line;
+      }
+    );
+
+  return new Response(
+    manifest,
+    {
+      headers:{
+        "Content-Type":
+          "application/vnd.apple.mpegurl",
+
+        "Access-Control-Allow-Origin":"*",
+
+        "Cache-Control":
+          "no-cache"
+      }
+    }
+  );
+}
           {
             headers: {
               "Content-Type":
