@@ -71,40 +71,90 @@ async function loadMeta(id) {
  segment proxy
 */
 async function proxyFile(
-  fileUrl
+  fileUrl,
+  request
 ) {
+
+  const headers = {
+
+    "User-Agent":
+      "Mozilla/5.0"
+  };
+
+
+  /*
+   range forward
+  */
+  const range =
+    request.headers.get(
+      "range"
+    );
+
+
+  if (range) {
+
+    headers[
+      "Range"
+    ] = range;
+  }
+
 
   const upstream =
     await fetch(
       fileUrl,
       {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0"
-        }
+        headers
       }
     );
+
+
+  const out =
+    new Headers();
+
+
+  const pass =
+    [
+      "content-type",
+      "content-length",
+      "content-range",
+      "accept-ranges"
+    ];
+
+
+  for (const key of pass) {
+
+    const value =
+      upstream.headers.get(
+        key
+      );
+
+    if (value) {
+
+      out.set(
+        key,
+        value
+      );
+    }
+  }
+
+
+  out.set(
+    "Access-Control-Allow-Origin",
+    "*"
+  );
+
 
   return new Response(
     upstream.body,
     {
-      headers: {
+      status:
+        upstream.status,
 
-        "Content-Type":
-          upstream.headers.get(
-            "content-type"
-          ) || "video/mp4",
-
-        "Accept-Ranges":
-          "bytes",
-
-        "Access-Control-Allow-Origin":
-          "*"
-      }
+      headers:
+        out
     }
   );
 }
-
 
 /*
  always build hls
