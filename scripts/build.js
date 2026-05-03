@@ -3,6 +3,7 @@ import fs from "fs";
 const worker =
   "https://okrutv.k33n26.workers.dev";
 
+
 const lines =
   fs
     .readFileSync(
@@ -12,19 +13,28 @@ const lines =
     .split("\n")
     .filter(Boolean);
 
+
 let m3u =
   "#EXTM3U\n";
 
 
 for (const line of lines) {
 
+  const parts =
+    line
+      .split("|")
+      .map(
+        x =>
+          x.trim()
+      );
+
+
   const [
     name,
     id,
     logo,
     group
-  ] =
-    line.split("|");
+  ] = parts;
 
 
   m3u +=
@@ -38,7 +48,7 @@ ${worker}/${id}.m3u8
 fs.mkdirSync(
   "playlist",
   {
-    recursive: true
+    recursive:true
   }
 );
 
