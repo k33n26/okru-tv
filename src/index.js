@@ -198,9 +198,9 @@ export default {
         );
 
       return await proxyFile(
-        file
-      );
-    }
+  file,
+  request
+);
 
 
     const path =
