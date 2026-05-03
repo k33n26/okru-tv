@@ -20,7 +20,12 @@ let m3u =
 
 for (const line of lines) {
 
-  const parts =
+  const [
+    name,
+    id,
+    logo,
+    group
+  ] =
     line
       .split("|")
       .map(
@@ -29,17 +34,9 @@ for (const line of lines) {
       );
 
 
-  const [
-    name,
-    id,
-    logo,
-    group
-  ] = parts;
-
-
   m3u +=
 `#EXTINF:-1 tvg-name="${name}" tvg-logo="${logo}" group-title="${group}",${name}
-${worker}/${id}.m3u8
+${worker}/${id}.mp4
 
 `;
 }
