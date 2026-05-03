@@ -5,6 +5,7 @@ function decodeHtml(str) {
     .replace(/&#39;/g, "'");
 }
 
+
 function getBest(videos, quality) {
 
   const order = {
@@ -82,6 +83,70 @@ async function loadMeta(id) {
 }
 
 
+async function proxyManifest(
+  manifestUrl
+) {
+
+  const upstream =
+    await fetch(
+      manifestUrl,
+      {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0"
+        }
+      }
+    );
+
+  let manifest =
+    await upstream.text();
+
+  /*
+   relative segmentleri
+   absolute yap
+  */
+
+  const base =
+    manifestUrl.substring(
+      0,
+      manifestUrl.lastIndexOf("/") + 1
+    );
+
+  manifest =
+    manifest.replace(
+      /^([^#].+)$/gm,
+      line => {
+
+        if (
+          line.startsWith(
+            "http"
+          )
+        ) {
+          return line;
+        }
+
+        return base + line;
+      }
+    );
+
+  return new Response(
+    manifest,
+    {
+      headers: {
+        "Content-Type":
+          "application/vnd.apple.mpegurl",
+
+        "Access-Control-Allow-Origin":
+          "*",
+
+        "Cache-Control":
+          "no-cache"
+      }
+    }
+  );
+}
+
+
 export default {
 
   async fetch(request) {
@@ -131,6 +196,11 @@ export default {
           quality
         );
 
+
+      /*
+       JSON
+      */
+
       if (
         path.endsWith(
           ".json"
@@ -139,9 +209,11 @@ export default {
 
         return Response.json({
           id,
+
           title:
             meta.movie
               ?.title,
+
           qualities:
             videos.map(
               x =>
@@ -151,72 +223,25 @@ export default {
       }
 
 
+      /*
+       REAL HLS
+      */
+
       if (
-  path.endsWith(
-    ".m3u8"
-  )
-) {
+        path.endsWith(
+          ".m3u8"
+        )
+      ) {
 
-  const upstream =
-    await fetch(
-      selected.url,
-      {
-        headers:{
-          "User-Agent":
-            "Mozilla/5.0"
-        }
-      }
-    );
-
-  let manifest =
-    await upstream.text();
-
-  const base =
-    selected.url.substring(
-      0,
-      selected.url.lastIndexOf("/") + 1
-    );
-
-  manifest =
-    manifest.replace(
-      /^([^#].+)$/gm,
-      line => {
-
-        if(
-          line.startsWith(
-            "http"
-          )
-        ){
-          return line;
-        }
-
-        return base + line;
-      }
-    );
-
-  return new Response(
-    manifest,
-    {
-      headers:{
-        "Content-Type":
-          "application/vnd.apple.mpegurl",
-
-        "Access-Control-Allow-Origin":"*",
-
-        "Cache-Control":
-          "no-cache"
-      }
-    }
-  );
-}
-          {
-            headers: {
-              "Content-Type":
-                "application/vnd.apple.mpegurl"
-            }
-          }
+        return await proxyManifest(
+          selected.url
         );
       }
+
+
+      /*
+       MP4
+      */
 
       return Response.redirect(
         selected.url,
