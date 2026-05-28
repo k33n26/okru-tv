@@ -4,6 +4,7 @@ Züğürt Ağa -1985|7172579527222|https://i.ibb.co/S4hbGh49/Z-rt-A-a-film.jpg|�
 Değirmen -1986|1199762049590|https://i.ibb.co/zV8Z6wHw/Degirmen-1986.jpg|Şener Şen
 Şark Bülbülü -1979|6479960541900|https://i.ibb.co/93vMHB27/ark-b-lb-l.jpg|Kemal Sunal
 Muhsin Bey -1987|7171877505740|https://i.ibb.co/FL6QLnkq/Muhsin-Bey-film-afi-i.jpg|Şener Şen
+Muhsin Bey(Uzun Versiyon) -1987|11381749975660|https://i.ibb.co/FL6QLnkq/Muhsin-Bey-film-afi-i.jpg|Şener Şen
 Sosyete Şaban -1985|6479960607436|https://i.ibb.co/VY013R54/sosyete-aban.jpg|Kemal Sunal
 Varyemez -1991|4083117198028|https://i.ibb.co/XkYdhKNk/Varyemez.jpg|Kemal Sunal
 Cibali Karakolu -1980|3501566528204|https://i.ibb.co/Jwr32rG8/cibali.jpg|Nejat Uygur
@@ -101,5 +102,15 @@ Zübük -1980|12764171274860|https://i.ibb.co/8gp9Z63g/Zubuk-film-afisi.jpg|Kema
 Aşk Filmlerinin Unutulmaz Yönetmeni -1990|13968178809452|https://i.ibb.co/5WbVJqQ1/A-k-Filmlerinin-Unutulmaz-Y-netmeni.jpg|Şener Şen
 Gölge Oyunu -1992|13951568120428|https://i.ibb.co/0yQ2QXzY/G-lge-Oyunu-1992.jpg|Şener Şen
 Şekerpare -1983|13790541777516|https://i.ibb.co/gMwBymCb/ekerpare-film-afi-i.jpg|Şener Şen
-
+Eyvah Eyvah -2010|12389176904300|https://i.ibb.co/HDN2xq44/Eyyvah-Eyvah-film-afi-i.jpg|Ata Demirer
+Eyvah Eyvah-2 -2011|12389465393772|https://i.ibb.co/zWMxsWwc/500px-Eyyvah-Eyvah-2-film-afi-i.jpg|Ata Demirer
+Erkek Güzeli Sefil Bilo -1979|12373030341228|https://i.ibb.co/6c4wm99m/Erkek-G-zeli-Sefil-Bilo-film-afi-i.jpg|İlyas Salman
+Aslan Bacanak -1977|12247798975084|https://i.ibb.co/GfgWqNxG/Aslan-Bacanak.jpg|Zeki Alasya-Metin Akpınar
+Çirkinlerde Sever -1981|12156257372780|https://i.ibb.co/vNMQRYB/irkinler-de-Sever-afi.jpg|İlyas Salman
+Çıplak Vatandaş -1985|12135649577580|https://i.ibb.co/FLvGjQ1b/plak-Vatanda-afi.jpg|Şener Şen
+Muro Nalet Olsun İçimdeki İnsan Sevgisine -2008|11918661323372|https://i.ibb.co/7xmbQdxc/Muro-Nalet-Olsun-imdeki-nsan-Sevgisine-film-afi-i.jpg|Yeşilçam
+Şans Kapıyı Kırınca -2005|11668405815916|https://i.ibb.co/jP2chMsq/ans-kap-y-k-r-nca.jpg|Ferhan Şensoy
+Av Mevsimi -2010|11056755051116|https://i.ibb.co/mVs7WhBw/Av-Mevsimi.jpg|Şener Şen
+Devrim Arabaları -2008|10873387289196|https://i.ibb.co/FLqCtqPk/Devrim-Arabalar.jpg|Yeşilçam
+Pardon -2004|10564214065772|https://i.ibb.co/KcG0RWVb/Pardon.jpg|Ferhan Şensoy
 
