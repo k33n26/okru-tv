@@ -293,8 +293,11 @@ https://okrutv.k33n26.workers.dev/2036822313676.mp4
 #EXTINF:-1 tvg-name="Hababam Sınıfı Güle Güle -1981" tvg-logo="https://i.ibb.co/GfjXLHK4/Hababam-S-n-f-G-le-G-le-DVD-kapa.jpg" group-title="Hababam Sınıfı",Hababam Sınıfı Güle Güle -1981
 https://okrutv.k33n26.workers.dev/2285672336076.mp4
 
-#EXTINF:-1 tvg-name="Bizimkiler.216.Bolum" tvg-logo="logo" group-title="Bizimkiler",Bizimkiler.216.Bolum
-https://okrutv.k33n26.workers.dev/14506862184991.mp4
+#EXTINF:-1 tvg-name="Atla Gel Şaban -1984" tvg-logo="https://i.ibb.co/xS523d6H/Atla-Gel-aban.jpg" group-title="Kemal Sunal",Atla Gel Şaban -1984
+https://okrutv.k33n26.workers.dev/15038768220703.mp4
+
+#EXTINF:-1 tvg-name="" tvg-logo="undefined" group-title="undefined",
+https://okrutv.k33n26.workers.dev/undefined.mp4
 
 #EXTINF:-1 tvg-name="" tvg-logo="undefined" group-title="undefined",
 https://okrutv.k33n26.workers.dev/undefined.mp4
