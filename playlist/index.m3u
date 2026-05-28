@@ -279,7 +279,7 @@ https://okrutv.k33n26.workers.dev/2037795588812.mp4
 https://okrutv.k33n26.workers.dev/14507371989535.mp4
 
 #EXTINF:-1 tvg-name="Namus Düşmanı -1986" tvg-logo="https://i.ibb.co/8nd526DH/Namus-Dusmani-1986-film-afisi.jpg" group-title="Zeki Alasya-Metin Akpınar",Namus Düşmanı -1986
-https://okrutv.k33n26.workers.dev/2037795785420.mp4
+https://okrutv.k33n26.workers.dev/15042872347167.mp4
 
 #EXTINF:-1 tvg-name="Doktor Civanım -1982" tvg-logo="https://i.ibb.co/XZZkfmx7/14doktorcivanimny1.jpg" group-title="Kemal Sunal",Doktor Civanım -1982
 https://okrutv.k33n26.workers.dev/2037571717836.mp4
@@ -358,4 +358,7 @@ https://okrutv.k33n26.workers.dev/9960407370348.mp4
 
 #EXTINF:-1 tvg-name="Eşkıya -1996" tvg-logo="https://i.ibb.co/jvL6D1Mr/Eskiya-film.jpg" group-title="Şener Şen",Eşkıya -1996
 https://okrutv.k33n26.workers.dev/9744633170540.mp4
+
+#EXTINF:-1 tvg-name="" tvg-logo="undefined" group-title="undefined",
+https://okrutv.k33n26.workers.dev/undefined.mp4
 
