@@ -91,7 +91,7 @@ Yanlış Numara -1985|2037934721740|https://i.ibb.co/v4jkNTM4/Yanl-Numara.jpg|Ze
 Sosyete Şaban -1985|2037934852812|https://i.ibb.co/zVnRjWL5/Sosyete-aban.jpg|Kemal Sunal
 Dönme Dolap -1983|2037795588812|https://i.ibb.co/7dJSrmNV/Donme-dolap-film.jpg|Zeki Alasya-Metin Akpınar
 Mirasyediler -1974|14507371989535|https://i.ibb.co/Df2kB72k/mirasyediler.jpg|Zeki Alasya-Metin Akpınar
-Namus Düşmanı -1986|2037795785420|https://i.ibb.co/8nd526DH/Namus-Dusmani-1986-film-afisi.jpg|Zeki Alasya-Metin Akpınar
+Namus Düşmanı -1986|15042872347167|https://i.ibb.co/8nd526DH/Namus-Dusmani-1986-film-afisi.jpg|Zeki Alasya-Metin Akpınar
 Doktor Civanım -1982|2037571717836|https://i.ibb.co/XZZkfmx7/14doktorcivanimny1.jpg|Kemal Sunal
 Şekerpare -1983|2036952730316|https://i.ibb.co/tPvmR389/ekerpare-film-afi-i.jpg|İlyas Salman
 Keriz -1985|2036822051532|https://i.ibb.co/V0qVyL0P/Keriz.jpg|Kemal Sunal
@@ -118,3 +118,4 @@ Her Şey Çok Güzel Olacak -1998|15041932888607|https://i.ibb.co/zVSTWy1m/500px
 Ne Olacak Şimdi -1979|9965828115052|https://i.ibb.co/27xCLHS8/Ne-Olacak-imdi.jpg|Şener Şen
 Davaro -1981|9960407370348|https://i.ibb.co/V1Tn1Hq/500px-Davaro-afi-i.jpg|Kemal Sunal
 Eşkıya -1996|9744633170540|https://i.ibb.co/jvL6D1Mr/Eskiya-film.jpg|Şener Şen
+
