@@ -1,7 +1,7 @@
 import fs from "fs";
 
 const worker =
-  "https://okrutv.k33n26.workers.dev";
+  "https://oktvru.k33n26.workers.dev";
 
 
 const lines =
